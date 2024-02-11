@@ -19,17 +19,24 @@ class User(Base):
     email = Column(String(250), nullable=True)
     pwd = Column(String(250), nullable=True)
     eventos = relationship('Evento', secondary=eventos, backref= 'user', lazy=True)
+    creado = relationship('Evento', backref='user', lazy=True)
 
 class Evento(Base):
     __tablename__ = 'evento'
     id = Column(Integer, primary_key=True)
-    categoria = Column(String(250), nullable=True)
     evento = Column(String(250), nullable=True)
     ciudad = Column(String(250), nullable=True)
     ubicación = Column(String(250), nullable=True)
     max_personas = Column(Integer, nullable=True)
-    # user_creador = Column(Integer, ForeignKey('user.id'), nullable=False)
+    id_categoria = Column(Integer, ForeignKey('categoria.id'), nullable=False)
+    user_creador = Column(Integer, ForeignKey('user.id'), nullable=False)
 
+class Categoria(Base):
+    __tablename__ = 'categoria'
+    id = Column(Integer, primary_key=True)
+    tipo = Column(String(250), nullable=True)
+    categoria = Column(String(250), nullable=True)
+    eventos = relationship('Evento', backref='categoria', lazy=True)
 
 ## Draw from SQLAlchemy base
 try:
