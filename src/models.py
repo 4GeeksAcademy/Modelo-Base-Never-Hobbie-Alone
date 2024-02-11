@@ -1,32 +1,35 @@
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, Table
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy import create_engine
 from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+eventos = Table('eventos', Base.metadata,
+    Column('evento_id', Integer, ForeignKey('evento.id'), primary_key=True),
+    Column('user_id', Integer, ForeignKey('user.id'), primary_key=True)
+)
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
+class User(Base):
+    __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+    nombre = Column(String(250), nullable=True)
+    email = Column(String(250), nullable=True)
+    pwd = Column(String(250), nullable=True)
+    eventos = relationship('Evento', secondary=eventos, backref= 'user', lazy=True)
 
-    def to_dict(self):
-        return {}
+class Evento(Base):
+    __tablename__ = 'evento'
+    id = Column(Integer, primary_key=True)
+    categoria = Column(String(250), nullable=True)
+    evento = Column(String(250), nullable=True)
+    ciudad = Column(String(250), nullable=True)
+    ubicación = Column(String(250), nullable=True)
+    max_personas = Column(Integer, nullable=True)
+    # user_creador = Column(Integer, ForeignKey('user.id'), nullable=False)
+
 
 ## Draw from SQLAlchemy base
 try:
