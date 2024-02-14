@@ -12,6 +12,11 @@ eventos = Table('eventos', Base.metadata,
     Column('user_id', Integer, ForeignKey('user.id'), primary_key=True)
 )
 
+hobbies = Table('hobbies', Base.metadata,
+    Column('categoria_id', Integer, ForeignKey('categoria.id'), primary_key=True),
+    Column('user_id', Integer, ForeignKey('user.id'), primary_key=True)
+)
+
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
@@ -19,6 +24,7 @@ class User(Base):
     email = Column(String(250), nullable=True)
     pwd = Column(String(250), nullable=True)
     eventos = relationship('Evento', secondary=eventos, backref= 'user', lazy=True)
+    hobbies = relationship('Categoria', secondary=eventos, backref= 'user', lazy=True)
     creado = relationship('Evento', backref='user', lazy=True)
 
 class Evento(Base):
